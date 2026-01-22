@@ -1,7 +1,7 @@
 apiVersion: kuttl.dev/v1beta1
 kind: TestSuite
 reportFormat: xml
-reportName: kuttl-report-openstack-lightspeed
+reportName: kuttl-report-openshift-ai-lightspeed
 reportGranularity: test
 namespace: openshift-lightspeed
 timeout: 600

@@ -1,12 +1,12 @@
 # Adds namespace to all resources.
-namespace: openstack-lightspeed-operator-system
+namespace: openshift-ai-lightspeed-operator-system
 
 # Value of this field is prepended to the
 # names of all resources, e.g. a deployment named
 # "wordpress" becomes "alices-wordpress".
 # Note that it should also match with the prefix (text before '-') of the namespace
 # field above.
-namePrefix: openstack-lightspeed-operator-
+namePrefix: openshift-ai-lightspeed-operator-
 
 # Labels to add to all resources and selectors.
 #labels:

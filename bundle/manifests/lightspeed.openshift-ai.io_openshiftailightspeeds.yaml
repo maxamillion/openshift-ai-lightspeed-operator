@@ -4,14 +4,14 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.16.5
   creationTimestamp: null
-  name: openstacklightspeeds.lightspeed.openstack.org
+  name: openshiftailightspeeds.lightspeed.openshift-ai.io
 spec:
-  group: lightspeed.openstack.org
+  group: lightspeed.openshift-ai.io
   names:
-    kind: OpenStackLightspeed
-    listKind: OpenStackLightspeedList
-    plural: openstacklightspeeds
-    singular: openstacklightspeed
+    kind: OpenShiftAILightspeed
+    listKind: OpenShiftAILightspeedList
+    plural: openshiftailightspeeds
+    singular: openshiftailightspeed
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -26,7 +26,7 @@ spec:
     name: v1beta1
     schema:
       openAPIV3Schema:
-        description: OpenStackLightspeed is the Schema for the openstacklightspeeds
+        description: OpenShiftAILightspeed is the Schema for the openshiftailightspeeds
           API
         properties:
           apiVersion:
@@ -47,7 +47,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: OpenStackLightspeedSpec defines the desired state of OpenStackLightspeed
+            description: OpenShiftAILightspeedSpec defines the desired state of OpenShiftAILightspeed
             properties:
               catalogSourceName:
                 default: redhat-operators
@@ -100,7 +100,7 @@ spec:
                   in LLMEndpoint
                 type: string
               ragImage:
-                description: ContainerImage for the OpenStack Lightspeed RAG container
+                description: ContainerImage for the OpenShift AI Lightspeed RAG container
                   (will be set to environmental default if empty)
                 type: string
               tlsCACertBundle:
@@ -116,7 +116,8 @@ spec:
             - modelName
             type: object
           status:
-            description: OpenStackLightspeedStatus defines the observed state of OpenStackLightspeed
+            description: OpenShiftAILightspeedStatus defines the observed state of
+              OpenShiftAILightspeed
             properties:
               conditions:
                 description: Conditions
@@ -145,8 +146,7 @@ spec:
                         understandable and could act accordingly.
                         It is meant for situations where Status=False and it should be indicated if it is just
                         informational, warning (next reconciliation might fix it) or an error (e.g. DB create issue
-                        and no actions to automatically resolve the issue can/should be done).
-                        For conditions where Status=Unknown or Status=True the Severity should be SeverityNone.
+                        and target condition is not reachable).
                       type: string
                     status:
                       description: Status of the condition, one of True, False, Unknown.

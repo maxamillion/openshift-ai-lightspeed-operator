@@ -10,10 +10,10 @@ metadata:
 apiVersion: ols.openshift.io/v1alpha1
 kind: OLSConfig
 ---
-apiVersion: lightspeed.openstack.org/v1beta1
-kind: OpenStackLightspeed
+apiVersion: lightspeed.openshift-ai.io/v1beta1
+kind: OpenShiftAILightspeed
 metadata:
-  name: openstack-lightspeed
+  name: openshift-ai-lightspeed
   namespace: openshift-lightspeed
 ---
 apiVersion: operators.coreos.com/v1alpha1

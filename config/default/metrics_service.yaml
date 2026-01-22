@@ -3,7 +3,7 @@ kind: Service
 metadata:
   labels:
     control-plane: controller-manager
-    app.kubernetes.io/name: openstack-lightspeed-operator
+    app.kubernetes.io/name: openshift-ai-lightspeed-operator
     app.kubernetes.io/managed-by: kustomize
   name: metrics
   namespace: system

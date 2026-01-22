@@ -6,7 +6,7 @@ apiVersion: v1
 kind: Secret
 type: Opaque
 metadata:
-  name: openstack-lightspeed-apitoken
+  name: openshift-ai-lightspeed-apitoken
   namespace: openshift-lightspeed
 stringData:
   apitoken: secret
@@ -15,7 +15,7 @@ apiVersion: v1
 kind: ConfigMap
 type: Opaque
 metadata:
-  name: openstack-lightspeed-cert
+  name: openshift-ai-lightspeed-cert
   namespace: openshift-lightspeed
 data:
   cert: |

@@ -8,6 +8,7 @@ require (
 	github.com/onsi/gomega v1.39.0
 	github.com/operator-framework/api v0.37.0
 	github.com/pkg/errors v0.9.1
+	k8s.io/api v0.34.2
 	k8s.io/apimachinery v0.34.3
 	k8s.io/client-go v0.34.2
 	k8s.io/utils v0.0.0-20250604170112-4c0f3b243397
@@ -90,7 +91,6 @@ require (
 	gopkg.in/evanphx/json-patch.v4 v4.12.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/api v0.34.2 // indirect
 	k8s.io/apiextensions-apiserver v0.34.2 // indirect
 	k8s.io/apiserver v0.34.2 // indirect
 	k8s.io/component-base v0.34.2 // indirect

@@ -7,13 +7,13 @@ metadata:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: openstack-lightspeed-apitoken
+  name: openshift-ai-lightspeed-apitoken
   namespace: openshift-lightspeed
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: openstack-lightspeed-cert
+  name: openshift-ai-lightspeed-cert
   namespace: openshift-lightspeed
 ---
 apiVersion: v1

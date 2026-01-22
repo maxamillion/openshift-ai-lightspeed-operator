@@ -6,11 +6,11 @@ metadata:
 spec:
   llm:
     providers:
-      - name: openstack-lightspeed-provider
+      - name: openshift-ai-lightspeed-provider
         type: openai
         url: http://mock-llm-api-server-pod:8000/v1
         credentialsSecretRef:
-          name: openstack-lightspeed-apitoken
+          name: openshift-ai-lightspeed-apitoken
         models:
           - name: ibm-granite/granite-3.1-8b-instruct
             parameters:
@@ -19,16 +19,16 @@ spec:
         deploymentName: test-deployment-name
         apiVersion: v1
   ols:
-    defaultProvider: openstack-lightspeed-provider
+    defaultProvider: openshift-ai-lightspeed-provider
     defaultModel: ibm-granite/granite-3.1-8b-instruct
     byokRAGOnly: true
     logLevel: INFO
     additionalCAConfigMapRef:
-      name: openstack-lightspeed-cert
+      name: openshift-ai-lightspeed-cert
     rag:
-      - image: quay.io/openstack-lightspeed/rag-content:os-docs-2025.2
+      - image: quay.io/opendatahub-io/openshift-ai-lightspeed-rag-content:rhoai-docs-2025.1
         indexID: ""
-        indexPath: /rag/vector_db/os_product_docs
+        indexPath: /rag/vector_db/rhoai_product_docs
     userDataCollection:
       feedbackDisabled: false
       transcriptsDisabled: false
@@ -47,19 +47,19 @@ status:
       status: "True"
       reason: Available
 ---
-apiVersion: lightspeed.openstack.org/v1beta1
-kind: OpenStackLightspeed
+apiVersion: lightspeed.openshift-ai.io/v1beta1
+kind: OpenShiftAILightspeed
 metadata:
-  name: openstack-lightspeed
+  name: openshift-ai-lightspeed
   namespace: openshift-lightspeed
 spec:
   catalogSourceName: redhat-operators
   catalogSourceNamespace: openshift-marketplace
-  llmCredentials: openstack-lightspeed-apitoken
+  llmCredentials: openshift-ai-lightspeed-apitoken
   llmEndpoint: http://mock-llm-api-server-pod:8000/v1
   llmEndpointType: openai
   modelName: ibm-granite/granite-3.1-8b-instruct
-  tlsCACertBundle: openstack-lightspeed-cert
+  tlsCACertBundle: openshift-ai-lightspeed-cert
   llmProjectID: test-project-id
   llmDeploymentName: test-deployment-name
 status:
@@ -72,8 +72,8 @@ status:
       status: "True"
       reason: Ready
       message: OpenShift Lightspeed operator is ready.
-    - type: OpenStackLightspeedReady
+    - type: OpenShiftAILightspeedReady
       status: "True"
       reason: Ready
-      message: OpenStack Lightspeed created
+      message: OpenShift AI Lightspeed created
 

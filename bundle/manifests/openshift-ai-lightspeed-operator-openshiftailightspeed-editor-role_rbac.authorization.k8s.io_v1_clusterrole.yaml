@@ -4,13 +4,13 @@ metadata:
   creationTimestamp: null
   labels:
     app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: openstack-lightspeed-operator
-  name: openstack-lightspeed-operator-openstacklightspeed-editor-role
+    app.kubernetes.io/name: openshift-ai-lightspeed-operator
+  name: openshift-ai-lightspeed-operator-openshiftailightspeed-editor-role
 rules:
 - apiGroups:
-  - lightspeed.openstack.org
+  - lightspeed.openshift-ai.io
   resources:
-  - openstacklightspeeds
+  - openshiftailightspeeds
   verbs:
   - create
   - delete
@@ -20,8 +20,8 @@ rules:
   - update
   - watch
 - apiGroups:
-  - lightspeed.openstack.org
+  - lightspeed.openshift-ai.io
   resources:
-  - openstacklightspeeds/status
+  - openshiftailightspeeds/status
   verbs:
   - get

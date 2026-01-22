@@ -1,5 +1,5 @@
 #!/bin/bash
-# Create a catalog for openstack-lightspeed
+# Create a catalog for openshift-ai-lightspeed
 # Pass the image location as the first argument
 # Optionally pass the catalog name as the second argument
 set -ex
@@ -10,7 +10,7 @@ if [ -z "${OUTPUT_DIR}" ]; then
 fi
 
 IMAGE_LOCATION=$1
-CATALOG_NAME=${2:-openstack-lightspeed-catalog}
+CATALOG_NAME=${2:-openshift-ai-lightspeed-catalog}
 
 DEST_DIR="${OUTPUT_DIR}/catalog"
 mkdir -p "${DEST_DIR}"
@@ -26,6 +26,6 @@ metadata:
 spec:
   sourceType: grpc
   image: ${IMAGE_LOCATION}
-  displayName: OpenStack Lightspeed Operator
+  displayName: OpenShift AI Lightspeed Operator
   publisher: Red Hat
 EOF

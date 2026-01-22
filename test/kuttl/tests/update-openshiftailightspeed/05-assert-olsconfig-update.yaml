@@ -6,11 +6,11 @@ metadata:
 spec:
   llm:
     providers:
-      - name: openstack-lightspeed-provider
+      - name: openshift-ai-lightspeed-provider
         type: bam
         url: http://mock-llm-api-server-pod-UPDATE:8000/v1
         credentialsSecretRef:
-          name: openstack-lightspeed-apitoken-UPDATE
+          name: openshift-ai-lightspeed-apitoken-UPDATE
         models:
           - name: ibm-granite/granite-3.1-8b-instruct-UPDATE
             parameters:
@@ -19,16 +19,16 @@ spec:
         deploymentName: test-deployment-name-UPDATE
         apiVersion: v1.1
   ols:
-    defaultProvider: openstack-lightspeed-provider
+    defaultProvider: openshift-ai-lightspeed-provider
     defaultModel: ibm-granite/granite-3.1-8b-instruct-UPDATE
     byokRAGOnly: true
     logLevel: INFO
     additionalCAConfigMapRef:
-      name: openstack-lightspeed-cert-UPDATE
+      name: openshift-ai-lightspeed-cert-UPDATE
     rag:
-      - image: quay.io/openstack-lightspeed/rag-content:os-docs-2025.2
+      - image: quay.io/opendatahub-io/openshift-ai-lightspeed-rag-content:rhoai-docs-2025.1
         indexID: ""
-        indexPath: /rag/vector_db/os_product_docs
+        indexPath: /rag/vector_db/rhoai_product_docs
     userDataCollection:
       feedbackDisabled: true
       transcriptsDisabled: true
