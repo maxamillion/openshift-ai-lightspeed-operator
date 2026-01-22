@@ -1,0 +1,13 @@
+apiVersion: lightspeed.openshift-ai.io/v1beta1
+kind: OpenShiftAILightspeed
+metadata:
+  labels:
+    app.kubernetes.io/name: openshift-ai-lightspeed-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: openshiftailightspeed-sample
+spec:
+  llmEndpoint: http://llm_provider:11434/v1
+  llmEndpointType: openai
+  llmCredentials: openshift-ai-lightspeed-apitoken
+  modelName: llama3.1:8b
+  tlsCACertBundle: openshift-ai-lightspeed-certs

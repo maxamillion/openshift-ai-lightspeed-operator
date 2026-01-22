@@ -1,0 +1,103 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: manager-role
+rules:
+- apiGroups:
+  - lightspeed.openshift-ai.io
+  resources:
+  - openshiftailightspeeds
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - lightspeed.openshift-ai.io
+  resources:
+  - openshiftailightspeeds/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - lightspeed.openshift-ai.io
+  resources:
+  - openshiftailightspeeds/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - ols.openshift.io
+  resources:
+  - olsconfigs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ols.openshift.io
+  resources:
+  - olsconfigs/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - ols.openshift.io
+  resources:
+  - olsconfigs/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - operators.coreos.com
+  resources:
+  - clusterserviceversions
+  verbs:
+  - get
+  - list
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: manager-role
+  namespace: openshift-lightspeed
+rules:
+- apiGroups:
+  - operators.coreos.com
+  resources:
+  - clusterserviceversions
+  verbs:
+  - delete
+  - patch
+  - update
+- apiGroups:
+  - operators.coreos.com
+  resources:
+  - installplans
+  verbs:
+  - delete
+  - get
+  - list
+  - update
+  - watch
+- apiGroups:
+  - operators.coreos.com
+  resources:
+  - subscriptions
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch

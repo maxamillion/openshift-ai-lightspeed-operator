@@ -1,0 +1,23 @@
+# permissions for end users to view openshiftailightspeeds.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: openshift-ai-lightspeed-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: openshiftailightspeed-viewer-role
+rules:
+- apiGroups:
+  - lightspeed.openshift-ai.io
+  resources:
+  - openshiftailightspeeds
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - lightspeed.openshift-ai.io
+  resources:
+  - openshiftailightspeeds/status
+  verbs:
+  - get

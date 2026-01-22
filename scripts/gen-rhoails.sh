@@ -1,0 +1,61 @@
+#!/bin/bash
+# Deploy openshift-ai-lightspeed using the catalog
+# Optionally pass the catalog name and channel to use
+set -ex
+
+if [ -z "${OUTPUT_DIR}" ]; then
+  echo "Please set OPERATOR_DIR"
+  exit 1
+fi
+
+CATALOG=${1:-openshift-ai-lightspeed-catalog}
+CHANNEL=${2:-alpha}
+
+DEST_DIR="${OUTPUT_DIR}/rhoails"
+mkdir -p "${DEST_DIR}"
+
+cat > "${DEST_DIR}/namespace.yaml" <<EOF
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openshift-lightspeed
+EOF
+
+cat > "${DEST_DIR}/operator_group.yaml" <<EOF
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: lightspeed-operator-group
+  namespace: openshift-lightspeed
+spec:
+  targetNamespaces:
+  - openshift-lightspeed
+EOF
+
+for i in $(seq 1 20); do
+  CSV_VERSION=$(oc get --ignore-not-found=true packagemanifest openshift-ai-lightspeed-operator -o go-template="{{range .status.channels}}{{if eq .name \"${CHANNEL}\"}}{{.currentCSV}}{{\"\n\"}}{{end}}{{end}}")
+  if [ -n "${CSV_VERSION}" ]; then
+    break
+  fi
+  sleep 2
+done
+if [ -z "${CSV_VERSION}" ]; then
+  exit 1
+fi
+
+cat > "${DEST_DIR}/subscription.yaml" <<EOF
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  labels:
+    operators.coreos.com/lightspeed-operator.openshift-lightspeed: ""
+  name: openshift-ai-lightspeed-operator
+  namespace: openshift-lightspeed
+spec:
+  channel: ${CHANNEL}
+  installPlanApproval: Automatic
+  name: openshift-ai-lightspeed-operator
+  source: ${CATALOG}
+  sourceNamespace: openshift-marketplace
+  startingCSV: ${CSV_VERSION}
+EOF

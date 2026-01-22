@@ -1,0 +1,27 @@
+# permissions for end users to edit openshiftailightspeeds.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: openshift-ai-lightspeed-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: openshiftailightspeed-editor-role
+rules:
+- apiGroups:
+  - lightspeed.openshift-ai.io
+  resources:
+  - openshiftailightspeeds
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - lightspeed.openshift-ai.io
+  resources:
+  - openshiftailightspeeds/status
+  verbs:
+  - get
