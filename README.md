@@ -1,7 +1,79 @@
 # OpenShift AI Lightspeed Operator
 
-OpenShift AI Lightspeed Operator is a generative AI-based virtual assistant for
-Red Hat OpenShift AI (RHOAI) users.
+OpenShift AI Lightspeed Operator is a Kubernetes Operator that deploys and configures a generative AI-based virtual assistant for Red Hat OpenShift AI (RHOAI) users.
+
+## Overview
+
+The assistant helps users with:
+
+- Natural-language questions about OpenShift AI
+- Troubleshooting AI/ML workloads
+- Configuration guidance and best practices
+- Understanding RHOAI features and capabilities
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    OpenShift Cluster                            │
+│  ┌────────────────────────────────────────────────────────┐     │
+│  │  OpenShift AI Lightspeed Operator                      │     │
+│  │  (This Repository)                                     │     │
+│  │                                                        │     │
+│  │  Manages:                                              │     │
+│  │  ├── OpenShift Lightspeed Operator (OLS) installation  │     │
+│  │  ├── OLSConfig (LLM + RAG configuration)               │     │
+│  │  └── RAG content container (RHOAI documentation)       │     │
+│  └────────────────────────────────────────────────────────┘     │
+│                           │                                      │
+│                           ▼                                      │
+│  ┌────────────────────────────────────────────────────────┐     │
+│  │  OpenShift Lightspeed Operator (OLS)                   │     │
+│  │  (Installed automatically via OLM)                     │     │
+│  │                                                        │     │
+│  │  Provides:                                             │     │
+│  │  ├── Chat UI widget in OpenShift Console               │     │
+│  │  ├── LLM integration layer                             │     │
+│  │  └── RAG (Retrieval Augmented Generation) pipeline     │     │
+│  └────────────────────────────────────────────────────────┘     │
+│                           │                                      │
+│                           ▼                                      │
+│  ┌────────────────────────────────────────────────────────┐     │
+│  │  External LLM Provider                                 │     │
+│  │  (OpenAI, Azure OpenAI, WatsonX, RHOAI vLLM, etc.)    │     │
+│  └────────────────────────────────────────────────────────┘     │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+## Key Components
+
+| Component | Purpose |
+|-----------|---------|
+| `OpenShiftAILightspeed` CRD | User-facing custom resource for configuration |
+| Controller | Reconciles desired state, manages OLS operator lifecycle |
+| RAG Content | Pre-built vector database with RHOAI documentation |
+| OLSConfig | Configuration passed to the underlying OLS operator |
+
+## End-User Experience
+
+1. **Administrator deploys the operator** to the cluster
+2. **Administrator creates an `OpenShiftAILightspeed` resource** with LLM configuration
+3. **Operator automatically**:
+   - Installs the OpenShift Lightspeed operator via OLM
+   - Configures it with the LLM endpoint and RAG content
+   - Sets up the chat widget in the OpenShift Console
+4. **End users** see a chat widget in the lower-right corner of the OpenShift web console and can ask questions about OpenShift AI
+
+## Supported LLM Providers
+
+| Provider | `llmEndpointType` value |
+|----------|-------------------------|
+| OpenAI / OpenAI-compatible | `openai` |
+| Azure OpenAI | `azure_openai` |
+| IBM WatsonX | `watsonx` |
+| IBM BAM | `bam` |
+| RHOAI vLLM | `rhoai_vllm` |
+| RHEL AI vLLM | `rhelai_vllm` |
 
 ## Images
 
@@ -150,6 +222,7 @@ oc describe -n openshift-lightspeed olsconfig
 ```
 
 ### Use
+
 Now you can go to the [OpenShift web console](https://console-openshift-console.apps-crc.testing) using the `kubeadmin` username and `12345678` password and use the OpenShift Lightspeed console widget that should appear at the lower right corner.
 You may need to click on `refresh` console link that appears on a message.
 
@@ -157,6 +230,67 @@ If you are running CRC on a different machine you can use `sshuttle` to connect 
 - Edit your local system's `/etc/hosts` (where you use the browser) and add this line verbatim (don't change the IP): `192.168.130.11 api.crc.testing canary-openshift-ingress-canary.apps-crc.testing console-openshift-console.apps-crc.testing default-route-openshift-image-registry.apps-crc.testing downloads-openshift-console.apps-crc.testing oauth-openshift.apps-crc.testing`
 - In your local system run `sshuttle -r $remote_username@$remote_server 192.168.130.0/24`.
 - Now the console should be accessible in your browser.
+
+## CRD Reference
+
+### OpenShiftAILightspeed Spec
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `llmEndpoint` | Yes | URL pointing to the LLM provider |
+| `llmEndpointType` | Yes | Provider type (see supported providers above) |
+| `modelName` | Yes | Name of the model to use at the LLM endpoint |
+| `llmCredentials` | Yes | Secret name containing API token (key: `apitoken`) |
+| `ragImage` | No | Container image for RAG content (defaults to RHOAI docs) |
+| `tlsCACertBundle` | No | ConfigMap name containing CA certificates |
+| `maxTokensForResponse` | No | Maximum tokens for response generation (default: 2048) |
+| `catalogSourceNamespace` | No | Namespace for OLS CatalogSource (default: `openshift-marketplace`) |
+| `catalogSourceName` | No | Name of CatalogSource for OLS (default: `redhat-operators`) |
+| `llmProjectID` | No | Project ID for providers like WatsonX |
+| `llmDeploymentName` | No | Deployment name for Azure OpenAI |
+| `llmAPIVersion` | No | API version for Azure OpenAI |
+| `feedbackDisabled` | No | Disable feedback collection |
+| `transcriptsDisabled` | No | Disable conversation transcripts collection |
+
+### Status Conditions
+
+| Condition | Description |
+|-----------|-------------|
+| `OpenShiftAILightspeedReady` | Instance is configured and operational |
+| `OpenShiftLightspeedOperatorReady` | OLS operator is installed and operational |
+
+## Repository Structure
+
+```
+openshift-ai-lightspeed-operator/
+├── api/v1beta1/           # CRD type definitions
+├── cmd/main.go            # Operator entry point
+├── config/                # Kubernetes manifests (CRD, RBAC, deployment)
+├── internal/controller/   # Reconciliation logic
+│   ├── openshiftailightspeed_controller.go  # Main reconciler
+│   ├── funcs.go           # OLSConfig management helpers
+│   └── ols_install.go     # OLS operator installation via OLM
+├── pkg/common/            # Shared utilities
+└── test/                  # KUTTL and E2E tests
+```
+
+## Key Design Decisions
+
+1. **Automatic OLS Operator Installation**: The operator installs OpenShift Lightspeed via OLM with manual InstallPlan approval to prevent unexpected upgrades
+
+2. **Ownership Tracking**: Uses Kubernetes OwnerReferences and labels to ensure proper cleanup on deletion
+
+3. **RAG Pre-packaging**: Ships with a pre-built vector database containing RHOAI documentation (`quay.io/opendatahub-io/openshift-ai-lightspeed-rag-content:rhoai-docs-2025.1`)
+
+4. **Singleton OLSConfig**: Only one OLSConfig named "cluster" exists; the operator patches it with the user's configuration
+
+## Technology Stack
+
+- **Language**: Go 1.24
+- **Framework**: Kubebuilder v4 + controller-runtime v0.22
+- **Kubernetes**: Compatible with v1.34+
+- **Testing**: Ginkgo/Gomega + KUTTL
+- **Packaging**: OLM (Operator Lifecycle Manager) bundles
 
 ## Development
 
