@@ -54,6 +54,45 @@ The assistant helps users with:
 | RAG Content | Pre-built vector database with RHOAI documentation |
 | OLSConfig | Configuration passed to the underlying OLS operator |
 
+## Relationship with OpenShift Lightspeed
+
+This operator requires **exclusive control** over the OpenShift Lightspeed (OLS) installation. It does not augment or coexist with an existing OLS deployment.
+
+### Behavior
+
+| Scenario | Behavior |
+|----------|----------|
+| **OLS already installed** | Operator fails with error requiring OLS uninstallation |
+| **No OLS exists** | Operator installs and manages OLS automatically |
+| **OCP documentation RAG** | Disabled - only RHOAI documentation is available |
+
+### If OpenShift Lightspeed is Already Installed
+
+The operator will fail with this error:
+
+```
+detected an existing OpenShift Lightspeed operator installation.
+Please uninstall OpenShift Lightspeed operator and allow the
+OpenShift AI Lightspeed operator to manage its installation automatically
+```
+
+You must uninstall the existing OpenShift Lightspeed operator before deploying OpenShift AI Lightspeed.
+
+### What Gets Disabled
+
+When this operator configures OLS, it sets `byokRAGOnly: true` which disables the standard OpenShift/OCP documentation RAG. The chat widget will only answer questions about OpenShift AI (RHOAI), not general OpenShift topics.
+
+### Choosing Between Operators
+
+Users must choose one:
+
+| Operator | Use Case |
+|----------|----------|
+| **OpenShift Lightspeed** | General OpenShift/OCP questions |
+| **OpenShift AI Lightspeed** | OpenShift AI (RHOAI) questions only |
+
+Running both simultaneously is not currently supported. Future work may add a "query router" to support multiple RAG sources.
+
 ## End-User Experience
 
 1. **Administrator deploys the operator** to the cluster
